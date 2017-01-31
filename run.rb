@@ -35,7 +35,7 @@ class Player
 
   def initialize(window)
     @window = window
-    @ship = Gosu::Image.new(window, "media/turtle.png", false)
+    @image = Gosu::Image.new(window, "media/turtle.png", false)
     @angle = 90
     @x = 300
     @y = 300
@@ -53,22 +53,29 @@ class Player
   end
 
   def draw
-    @ship.draw_rot(@x, @y, 2, @angle)
+    @image.draw_rot(@x, @y, 2, @angle)
   end
 
 end
 
 
 class GameWindow < Gosu::Window
+
+  RED = Gosu::Color::RED
+  YELLOW = Gosu::Color::YELLOW
+
   def initialize
     super(WIDTH, HEIGHT, false)
     self.caption = "Simple Gosu"
     @background_image = Gosu::Image.new(self, "media/water.png", true)
     @player = Player.new(self)
-    @blocks = 1.upto(100).to_a.map { |_i| Block.new(self, rand(WIDTH), rand(HEIGHT)) }
+    @blocks = 1.upto(15).to_a.map { |_i| Block.new(self, rand(WIDTH), rand(HEIGHT)) }
+    @ticks = 0
+    @text_color = RED
   end
 
   def update
+    @ticks += 1
     if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
       @player.turn(:counterclockwise)
     end
@@ -76,6 +83,11 @@ class GameWindow < Gosu::Window
       @player.turn(:clockwise)
     end
     move
+    change_color if @ticks % 5 == 0
+  end
+
+  def change_color
+    @text_color = @text_color == RED ? YELLOW : RED
   end
 
   def move
@@ -87,6 +99,13 @@ class GameWindow < Gosu::Window
     @background_image.draw(0, 0, 0)
     @player.draw
     @blocks.each(&:draw)
+    you_win if @blocks.empty?
+  end
+
+  def you_win
+    @player.turn(:clockwise)
+    args = width/2 - 100,height/2 - 100, 1, 1, 3, @text_color
+    Gosu::Image.from_text(self, 'YOU WIN!', Gosu.default_font_name, 45).draw(*args) if @blocks.empty?
   end
 
   def button_down(id)
