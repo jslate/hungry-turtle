@@ -11,7 +11,7 @@ class Block
     @window = window
     @x = x
     @y = y
-    @color = Gosu::Color.rgb(100,100,255)
+    @color = Gosu::Color.rgb(177,98,50)
   end
 
   def draw
@@ -35,17 +35,21 @@ class Player
 
   def initialize(window)
     @window = window
-    @ship = Gosu::Image.new(window, "media/spaceship.png", false)
+    @ship = Gosu::Image.new(window, "media/turtle.png", false)
     @angle = 90
     @x = 300
     @y = 300
   end
 
   def move
-    @x += Gosu::offset_x(@angle, 5)
-    @y += Gosu::offset_y(@angle, 5)
+    @x += Gosu::offset_x(@angle, 1)
+    @y += Gosu::offset_y(@angle, 1)
     @x %= @window.width
     @y %= @window.height
+  end
+
+  def turn(direction)
+    @angle += (direction == :clockwise ? 1 : -1)
   end
 
   def draw
@@ -59,23 +63,17 @@ class GameWindow < Gosu::Window
   def initialize
     super(WIDTH, HEIGHT, false)
     self.caption = "Simple Gosu"
-    @background_image = Gosu::Image.new(self, "media/space.png", true)
+    @background_image = Gosu::Image.new(self, "media/water.png", true)
     @player = Player.new(self)
     @blocks = 1.upto(100).to_a.map { |_i| Block.new(self, rand(WIDTH), rand(HEIGHT)) }
   end
 
   def update
     if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
-      @player.angle = 270
+      @player.turn(:counterclockwise)
     end
     if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
-      @player.angle = 90
-    end
-    if button_down? Gosu::KbUp or button_down? Gosu::GpButton0 then
-      @player.angle = 0
-    end
-    if button_down? Gosu::KbDown or button_down? Gosu::GpButton1 then
-      @player.angle = 180
+      @player.turn(:clockwise)
     end
     move
   end
