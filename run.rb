@@ -4,7 +4,7 @@ require './block'
 require './game_window'
 
 module ZOrder
-  BACKGROUND, BLOCK, PLAYER, TEXT = *0..3
+  BACKGROUND, BLOCK, PLAYER, BEN, TEXT = *0..4
 end
 
 window = GameWindow.new
