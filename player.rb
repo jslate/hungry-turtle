@@ -25,7 +25,7 @@ class Player
   end
 
   def draw
-    @image.draw_rot(@x, @y, 2, @angle)
+    @image.draw_rot(@x, @y, ZOrder::PLAYER, @angle)
   end
 
 end

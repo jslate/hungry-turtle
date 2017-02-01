@@ -15,41 +15,33 @@ class GameWindow < Gosu::Window
     @ticks = 0
     @text_color = RED
     @song = Gosu::Song.new("media/song.m4a")
-    @song.volume = 0.5
+    @song.volume = 1
     @song.play(true)
   end
 
   def update
     @ticks += 1
-    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
-      @player.turn(:counterclockwise)
-    end
-    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
-      @player.turn(:clockwise)
-    end
-    move
+    @player.turn(:counterclockwise) if [Gosu::KbLeft, Gosu::GpLeft].any?{ |k|button_down?(k) }
+    @player.turn(:clockwise) if [Gosu::KbRight, Gosu::GpRight].any?{ |k|button_down?(k) }
+    @player.move
+    @blocks.reject!{|block| block.is_near?(@player.x, @player.y)}
     change_color if @ticks % 5 == 0
+  end
+
+  def draw
+    @background_image.draw(0, 0, ZOrder::BACKGROUND)
+    @player.draw
+    @blocks.each(&:draw)
+    you_win if @blocks.empty?
   end
 
   def change_color
     @text_color = @text_color == RED ? YELLOW : RED
   end
 
-  def move
-    @player.move
-    @blocks.reject!{|block| block.is_near?(@player.x, @player.y)}
-  end
-
-  def draw
-    @background_image.draw(0, 0, 0)
-    @player.draw
-    @blocks.each(&:draw)
-    you_win if @blocks.empty?
-  end
-
   def you_win
     @player.turn(:clockwise)
-    args = width/2 - 100,height/2 - 100, 1, 1, 3, @text_color
+    args = width/2 - 100,height/2 - 100, 1, 1, ZOrder::TEXT, @text_color
     Gosu::Image.from_text(self, 'YOU WIN!', Gosu.default_font_name, 45).draw(*args) if @blocks.empty?
   end
 

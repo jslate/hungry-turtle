@@ -14,7 +14,7 @@ class Block
       @x + SIZE, @y, @color,
       @x, @y + SIZE, @color,
       @x + SIZE, @y + SIZE, @color,
-    1)
+    ZOrder::BLOCK)
   end
 
   def is_near?(x, y)
