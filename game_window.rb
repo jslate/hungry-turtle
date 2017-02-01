@@ -14,6 +14,9 @@ class GameWindow < Gosu::Window
     @blocks = 1.upto(BLOCK_COUNT).to_a.map { |_i| Block.new(self, rand(WIDTH), rand(HEIGHT)) }
     @ticks = 0
     @text_color = RED
+    @song = Gosu::Song.new("media/song.m4a")
+    @song.volume = 0.5
+    @song.play(true)
   end
 
   def update
