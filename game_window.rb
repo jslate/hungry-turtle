@@ -8,7 +8,7 @@ class GameWindow < Gosu::Window
 
   def initialize
     super(WIDTH, HEIGHT, false)
-    self.caption = "Simple Gosu"
+    self.caption = "Hungry Turtle"
     @background_image = Gosu::Image.new(self, "media/water.png", true)
     @player = Player.new(self)
     @blocks = 1.upto(BLOCK_COUNT).to_a.map { |_i| Block.new(self, rand(WIDTH), rand(HEIGHT)) }
