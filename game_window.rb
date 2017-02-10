@@ -27,7 +27,7 @@ class GameWindow < Gosu::Window
     @player.turn(:clockwise) if [Gosu::KbRight, Gosu::GpRight].any?{ |k|button_down?(k) }
     @player.move
     @blocks.reject!{|block| consume?(block)}
-    add_blocks(1) if @ticks % 200 == 0 && !won?
+    add_blocks(1) if @ticks % 600 == 0 && !won?
     @blocks.each(&:move)
     change_color if @ticks % 5 == 0
   end
